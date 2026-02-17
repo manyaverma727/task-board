@@ -177,7 +177,14 @@ export default function App() {
   const boards = boardsQuery.data?.items || [];
 
   useEffect(() => {
-    if (!selectedBoardId && boards.length > 0) {
+    if (boards.length === 0) {
+      setSelectedBoardId(null);
+      return;
+    }
+
+    const selectedStillExists = boards.some((board) => board.id === selectedBoardId);
+
+    if (!selectedBoardId || !selectedStillExists) {
       setSelectedBoardId(boards[0].id);
     }
   }, [boards, selectedBoardId, setSelectedBoardId]);
@@ -204,6 +211,14 @@ export default function App() {
       />
     );
   }
+
+  const queryErrorMessage =
+    (boardsQuery.error as Error | null)?.message ||
+    (boardQuery.error as Error | null)?.message ||
+    (tasksQuery.error as Error | null)?.message ||
+    (membersQuery.error as Error | null)?.message ||
+    (activitiesQuery.error as Error | null)?.message ||
+    null;
 
   return (
     <div className="app-shell">
@@ -236,6 +251,23 @@ export default function App() {
                 <section className="error-banner">
                   <span>{uiError}</span>
                   <button onClick={() => setUiError(null)}>Dismiss</button>
+                </section>
+              ) : null}
+
+              {queryErrorMessage ? (
+                <section className="error-banner">
+                  <span>{queryErrorMessage}</span>
+                  <button
+                    onClick={() => {
+                      boardsQuery.refetch();
+                      boardQuery.refetch();
+                      tasksQuery.refetch();
+                      membersQuery.refetch();
+                      activitiesQuery.refetch();
+                    }}
+                  >
+                    Retry
+                  </button>
                 </section>
               ) : null}
 
