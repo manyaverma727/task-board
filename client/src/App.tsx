@@ -13,12 +13,14 @@ export default function App() {
 
   const token = useAppStore((state) => state.token);
   const user = useAppStore((state) => state.user);
+  const theme = useAppStore((state) => state.theme);
   const selectedBoardId = useAppStore((state) => state.selectedBoardId);
   const taskSearch = useAppStore((state) => state.taskSearch);
   const taskPage = useAppStore((state) => state.taskPage);
 
   const setAuth = useAppStore((state) => state.setAuth);
   const logout = useAppStore((state) => state.logout);
+  const toggleTheme = useAppStore((state) => state.toggleTheme);
   const setSelectedBoardId = useAppStore((state) => state.setSelectedBoardId);
   const setTaskSearch = useAppStore((state) => state.setTaskSearch);
   const setTaskPage = useAppStore((state) => state.setTaskPage);
@@ -180,6 +182,10 @@ export default function App() {
     }
   }, [boards, selectedBoardId, setSelectedBoardId]);
 
+  useEffect(() => {
+    document.body.dataset.theme = theme;
+  }, [theme]);
+
   const tasksByList = useMemo(() => {
     return tasks.reduce<Record<string, typeof tasks>>((acc, task) => {
       const key = task.listId;
@@ -206,7 +212,10 @@ export default function App() {
           <strong>{user.name}</strong>
           <span>{user.email}</span>
         </div>
-        <button onClick={logout}>Logout</button>
+        <div className="topbar-actions">
+          <button onClick={toggleTheme}>{theme === "light" ? "Dark mode" : "Light mode"}</button>
+          <button onClick={logout}>Logout</button>
+        </div>
       </header>
 
       <div className="layout">

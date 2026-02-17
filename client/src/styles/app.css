@@ -14,6 +14,17 @@
   background: var(--bg);
 }
 
+body[data-theme="dark"] {
+  --bg: #111111;
+  --surface: #181818;
+  --text: #efefef;
+  --muted: #a3a3a3;
+  --border: #2d2d2d;
+  --border-strong: #4a4a4a;
+  --danger: #ffb4ab;
+  --danger-bg: #3c1515;
+}
+
 * {
   box-sizing: border-box;
 }
@@ -21,6 +32,7 @@
 body {
   margin: 0;
   background: var(--bg);
+  transition: background 150ms ease;
 }
 
 button,
@@ -85,6 +97,12 @@ button.danger {
   display: block;
   color: var(--muted);
   font-size: 12px;
+}
+
+.topbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .layout {
@@ -251,7 +269,7 @@ button.danger {
 .task-card {
   border: 1px solid var(--border);
   border-radius: 6px;
-  background: #fafafa;
+  background: var(--bg);
   padding: 8px;
 }
 
@@ -310,7 +328,7 @@ button.danger {
 }
 
 .activity-feed li {
-  border-top: 1px solid #efefef;
+  border-top: 1px solid var(--border);
   padding-top: 8px;
 }
 
