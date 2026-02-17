@@ -2,6 +2,18 @@
 
 Interview assignment implementation for a lightweight Trello/Notion-style board app.
 
+## Live Deployment
+
+- Frontend: [https://task-board-client-one.vercel.app](https://task-board-client-one.vercel.app)
+- Backend API: [https://task-board-1-o9ux.onrender.com/api/health](https://task-board-1-o9ux.onrender.com/api/health)
+
+Production demo credentials:
+
+- `owner@demo.com / demo1234`
+- `member@demo.com / demo1234`
+
+Shared demo board on production: `Production Demo Board`
+
 ## Stack
 
 - Frontend: React + Vite + TypeScript
@@ -21,6 +33,7 @@ Interview assignment implementation for a lightweight Trello/Notion-style board 
 
 - Signup/login with JWT auth
 - Create boards with default lists
+- Create/update/delete lists
 - Create/update/delete tasks
 - Drag-and-drop task movement across lists
 - Assign users to tasks
@@ -28,6 +41,7 @@ Interview assignment implementation for a lightweight Trello/Notion-style board 
 - Activity history logging
 - Search and pagination for tasks
 - Pagination for activity feed
+- Light/dark mode toggle
 - Basic backend test coverage (`pagination` utility tests)
 - Deployment-ready code structure and environment config
 
@@ -87,6 +101,24 @@ npm run dev
 - Real-time strategy: `/docs/realtime-strategy.md`
 - Scalability considerations: `/docs/scalability.md`
 - Deployment guide: `/docs/deployment.md`
+
+## Assignment Coverage Checklist
+
+- User authentication (signup/login): completed
+- Create boards with multiple lists: completed
+- Create/update/delete tasks: completed
+- Drag and drop tasks across lists: completed
+- Assign users to tasks: completed
+- Real-time updates across users: completed
+- Activity history tracking: completed
+- Search and pagination: completed
+- SPA frontend with proper state management: completed
+- REST backend APIs connected to DB: completed
+- Database schema design and indexing: completed
+- Real-time communication via WebSocket (Socket.IO): completed
+- Basic test coverage: completed
+- Deployment-ready structure and live deployment: completed
+- Architecture/API/schema/realtime/scalability documentation: completed
 
 ## Trade-offs / Assumptions
 
