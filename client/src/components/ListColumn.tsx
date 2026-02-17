@@ -7,6 +7,8 @@ interface ListColumnProps {
   members: User[];
   onCreateTask: (listId: string, payload: { title: string; description?: string }) => void;
   onMoveTask: (taskId: string, targetListId: string) => void;
+  onUpdateList: (listId: string, payload: { title?: string }) => void;
+  onDeleteList: (listId: string) => void;
   onUpdateTask: (taskId: string, payload: { title?: string; description?: string }) => void;
   onDeleteTask: (taskId: string) => void;
   onAssignTask: (taskId: string, assigneeIds: string[]) => void;
@@ -98,12 +100,16 @@ export function ListColumn({
   members,
   onCreateTask,
   onMoveTask,
+  onUpdateList,
+  onDeleteList,
   onUpdateTask,
   onDeleteTask,
   onAssignTask,
 }: ListColumnProps) {
   const [taskTitle, setTaskTitle] = useState("");
   const [taskDescription, setTaskDescription] = useState("");
+  const [isEditingList, setIsEditingList] = useState(false);
+  const [listTitle, setListTitle] = useState(list.title);
 
   return (
     <section
@@ -118,8 +124,45 @@ export function ListColumn({
       }}
     >
       <header>
-        <h3>{list.title}</h3>
-        <span>{tasks.length} tasks</span>
+        {isEditingList ? (
+          <div className="list-title-edit">
+            <input value={listTitle} onChange={(event) => setListTitle(event.target.value)} />
+            <button
+              onClick={() => {
+                onUpdateList(list.id, { title: listTitle });
+                setIsEditingList(false);
+              }}
+            >
+              Save
+            </button>
+            <button
+              onClick={() => {
+                setListTitle(list.title);
+                setIsEditingList(false);
+              }}
+            >
+              Cancel
+            </button>
+          </div>
+        ) : (
+          <>
+            <h3>{list.title}</h3>
+            <div className="list-header-actions">
+              <span>{tasks.length} tasks</span>
+              <button onClick={() => setIsEditingList(true)}>Rename</button>
+              <button
+                className="danger"
+                onClick={() => {
+                  if (confirm(`Delete list "${list.title}" and all its tasks?`)) {
+                    onDeleteList(list.id);
+                  }
+                }}
+              >
+                Delete
+              </button>
+            </div>
+          </>
+        )}
       </header>
 
       <div className="task-list">

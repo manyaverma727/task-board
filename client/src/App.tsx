@@ -25,6 +25,10 @@ export default function App() {
 
   const [inviteEmail, setInviteEmail] = useState("");
   const [newListTitle, setNewListTitle] = useState("");
+  const [uiError, setUiError] = useState<string | null>(null);
+
+  const toErrorMessage = (error: unknown) =>
+    error instanceof Error ? error.message : "Request failed";
 
   useBoardSocket(token, selectedBoardId);
 
@@ -67,56 +71,90 @@ export default function App() {
     mutationFn: (payload: { title: string; description: string }) =>
       api.createBoard(token as string, payload),
     onSuccess: (data) => {
+      setUiError(null);
       queryClient.invalidateQueries({ queryKey: ["boards"] });
       setSelectedBoardId(data.board.id);
     },
+    onError: (error) => setUiError(toErrorMessage(error)),
   });
 
   const createList = useMutation({
     mutationFn: (payload: { title: string }) =>
       api.createList(token as string, selectedBoardId as string, payload),
     onSuccess: () => {
+      setUiError(null);
       queryClient.invalidateQueries({ queryKey: ["board", selectedBoardId] });
     },
+    onError: (error) => setUiError(toErrorMessage(error)),
+  });
+
+  const updateList = useMutation({
+    mutationFn: ({ listId, title }: { listId: string; title?: string }) =>
+      api.updateList(token as string, listId, { title }),
+    onSuccess: () => {
+      setUiError(null);
+      queryClient.invalidateQueries({ queryKey: ["board", selectedBoardId] });
+    },
+    onError: (error) => setUiError(toErrorMessage(error)),
+  });
+
+  const deleteList = useMutation({
+    mutationFn: (listId: string) => api.deleteList(token as string, listId),
+    onSuccess: () => {
+      setUiError(null);
+      queryClient.invalidateQueries({ queryKey: ["board", selectedBoardId] });
+      queryClient.invalidateQueries({ queryKey: ["boardTasks", selectedBoardId] });
+    },
+    onError: (error) => setUiError(toErrorMessage(error)),
   });
 
   const createTask = useMutation({
     mutationFn: ({ listId, title, description }: { listId: string; title: string; description?: string }) =>
       api.createTask(token as string, listId, { title, description }),
     onSuccess: () => {
+      setUiError(null);
       queryClient.invalidateQueries({ queryKey: ["boardTasks", selectedBoardId] });
     },
+    onError: (error) => setUiError(toErrorMessage(error)),
   });
 
   const moveTask = useMutation({
     mutationFn: ({ taskId, targetListId }: { taskId: string; targetListId: string }) =>
       api.moveTask(token as string, taskId, { targetListId, targetPosition: Date.now() }),
     onSuccess: () => {
+      setUiError(null);
       queryClient.invalidateQueries({ queryKey: ["boardTasks", selectedBoardId] });
     },
+    onError: (error) => setUiError(toErrorMessage(error)),
   });
 
   const updateTask = useMutation({
     mutationFn: ({ taskId, title, description }: { taskId: string; title?: string; description?: string }) =>
       api.updateTask(token as string, taskId, { title, description }),
     onSuccess: () => {
+      setUiError(null);
       queryClient.invalidateQueries({ queryKey: ["boardTasks", selectedBoardId] });
     },
+    onError: (error) => setUiError(toErrorMessage(error)),
   });
 
   const deleteTask = useMutation({
     mutationFn: (taskId: string) => api.deleteTask(token as string, taskId),
     onSuccess: () => {
+      setUiError(null);
       queryClient.invalidateQueries({ queryKey: ["boardTasks", selectedBoardId] });
     },
+    onError: (error) => setUiError(toErrorMessage(error)),
   });
 
   const assignTask = useMutation({
     mutationFn: ({ taskId, assigneeIds }: { taskId: string; assigneeIds: string[] }) =>
       api.assignTask(token as string, taskId, { assigneeIds }),
     onSuccess: () => {
+      setUiError(null);
       queryClient.invalidateQueries({ queryKey: ["boardTasks", selectedBoardId] });
     },
+    onError: (error) => setUiError(toErrorMessage(error)),
   });
 
   const addMember = useMutation({
@@ -125,9 +163,11 @@ export default function App() {
         email,
       }),
     onSuccess: () => {
+      setUiError(null);
       queryClient.invalidateQueries({ queryKey: ["members", selectedBoardId] });
       setInviteEmail("");
     },
+    onError: (error) => setUiError(toErrorMessage(error)),
   });
 
   const lists = boardQuery.data?.lists || [];
@@ -183,6 +223,13 @@ export default function App() {
             <div className="empty">Select or create a board</div>
           ) : (
             <>
+              {uiError ? (
+                <section className="error-banner">
+                  <span>{uiError}</span>
+                  <button onClick={() => setUiError(null)}>Dismiss</button>
+                </section>
+              ) : null}
+
               <section className="workspace-head">
                 <div>
                   <h1>{boardQuery.data?.board.title || "Board"}</h1>
@@ -258,6 +305,10 @@ export default function App() {
                       })
                     }
                     onMoveTask={(taskId, targetListId) => moveTask.mutate({ taskId, targetListId })}
+                    onUpdateList={(listId, payload) =>
+                      updateList.mutate({ listId, title: payload.title })
+                    }
+                    onDeleteList={(listId) => deleteList.mutate(listId)}
                     onUpdateTask={(taskId, payload) =>
                       updateTask.mutate({ taskId, title: payload.title, description: payload.description })
                     }

@@ -148,6 +148,24 @@ select {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 8px;
+}
+
+.list-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.list-title-edit {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+}
+
+.list-title-edit input {
+  min-width: 0;
 }
 
 .task-list {
@@ -226,6 +244,17 @@ button.danger {
 
 .activity-feed small {
   color: #6b7280;
+}
+
+.error-banner {
+  border: 1px solid #fecaca;
+  background: #fef2f2;
+  color: #991b1b;
+  border-radius: 8px;
+  padding: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .auth-wrap {
