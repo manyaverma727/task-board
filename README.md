@@ -85,6 +85,7 @@ npm run dev
 - Database schema: `/docs/db-schema.md`
 - API contract: `/docs/api-contract.md`
 - Real-time strategy: `/docs/realtime-strategy.md`
+- Scalability considerations: `/docs/scalability.md`
 
 ## Trade-offs / Assumptions
 
