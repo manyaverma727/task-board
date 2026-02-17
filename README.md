@@ -86,6 +86,7 @@ npm run dev
 - API contract: `/docs/api-contract.md`
 - Real-time strategy: `/docs/realtime-strategy.md`
 - Scalability considerations: `/docs/scalability.md`
+- Deployment guide: `/docs/deployment.md`
 
 ## Trade-offs / Assumptions
 
