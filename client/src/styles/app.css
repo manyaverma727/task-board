@@ -350,6 +350,25 @@ button.danger {
   padding: 10px;
 }
 
+.activity-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+.activity-pager {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.activity-pager span {
+  color: var(--muted);
+  font-size: 12px;
+}
+
 .activity-feed ul {
   list-style: none;
   margin: 0;

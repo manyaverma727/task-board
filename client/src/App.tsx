@@ -27,6 +27,7 @@ export default function App() {
 
   const [inviteEmail, setInviteEmail] = useState("");
   const [newListTitle, setNewListTitle] = useState("");
+  const [activityPage, setActivityPage] = useState(1);
   const [uiError, setUiError] = useState<string | null>(null);
 
   const toErrorMessage = (error: unknown) =>
@@ -64,8 +65,12 @@ export default function App() {
   });
 
   const activitiesQuery = useQuery({
-    queryKey: ["activities", selectedBoardId],
-    queryFn: () => api.getActivities(token as string, selectedBoardId as string, { page: 1, limit: 20 }),
+    queryKey: ["activities", selectedBoardId, activityPage],
+    queryFn: () =>
+      api.getActivities(token as string, selectedBoardId as string, {
+        page: activityPage,
+        limit: 20,
+      }),
     enabled: Boolean(token && selectedBoardId),
   });
 
@@ -188,6 +193,10 @@ export default function App() {
       setSelectedBoardId(boards[0].id);
     }
   }, [boards, selectedBoardId, setSelectedBoardId]);
+
+  useEffect(() => {
+    setActivityPage(1);
+  }, [selectedBoardId]);
 
   useEffect(() => {
     document.body.dataset.theme = theme;
@@ -360,7 +369,26 @@ export default function App() {
               </section>
 
               <section className="activity-feed">
-                <h2>Recent Activity</h2>
+                <div className="activity-head">
+                  <h2>Recent Activity</h2>
+                  <div className="activity-pager">
+                    <button
+                      disabled={activityPage <= 1}
+                      onClick={() => setActivityPage((page) => Math.max(1, page - 1))}
+                    >
+                      Prev
+                    </button>
+                    <span>
+                      Page {activitiesQuery.data?.page || 1} / {activitiesQuery.data?.totalPages || 1}
+                    </span>
+                    <button
+                      disabled={activityPage >= (activitiesQuery.data?.totalPages || 1)}
+                      onClick={() => setActivityPage((page) => page + 1)}
+                    >
+                      Next
+                    </button>
+                  </div>
+                </div>
                 <ul>
                   {(activitiesQuery.data?.items || []).map((activity) => (
                     <li key={activity.id}>
