@@ -94,12 +94,9 @@ npm run dev
 - Drag-drop currently updates list + position with simple numeric ordering.
 - Real-time strategy uses query invalidation for correctness over complex local patching.
 
-## Suggested Small Commit Flow
+## What I would improve next
 
-1. `chore: scaffold monorepo (client/server)`
-2. `feat(api): auth with jwt + mongoose models`
-3. `feat(api): boards lists tasks members activities`
-4. `feat(api): socket room sync + board events`
-5. `feat(ui): auth and board workspace`
-6. `feat(ui): drag-drop, assignment, search, pagination`
-7. `docs: architecture schema api realtime setup`
+- Add optimistic updates for drag-drop so movement feels instant.
+- Add richer board roles/permissions (owner/editor/viewer).
+- Move Socket.IO scaling to Redis adapter for multi-instance deployments.
+- Add E2E tests for key flows (auth, move task, assignment, activity logging).
